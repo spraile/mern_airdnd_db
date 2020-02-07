@@ -19,10 +19,24 @@ const UserSchema = new Schema({
 		type: String,
 		required : true
 	},
+	number: {
+		type: Number,
+		required : true
+	},
 	role: {
 		type: String,
 		default: "user"
 	},
+	profile : {
+		displayname : {
+			type : String,
+			default : ""
+		},
+		picture : {
+			type : String,
+			default : ""
+		}
+	}
 })
 
 const User = mongoose.model('User',UserSchema);
