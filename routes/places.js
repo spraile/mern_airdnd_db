@@ -27,6 +27,7 @@ router.get('/:id',function (req,res,next) {
 	.catch(next)
 })
 
+
 //create
 router.post('/',upload.array('images'),(req,res,next) => {
 	let imgs = req.files.map(file => {
@@ -60,28 +61,23 @@ router.put('/:id', (req,res,next) => {
 
 })
 
-router.put('/:pid/:iid',upload.array('images'),(req,res,next) => {
-	// Place.findOneAndUpdate(
-	// 	{
-	// 		_id : req.params.id
-	// 	},
-	// 	{
-	// 		name : req.body.name,
-	// 		categoryId : req.body.categoryId,
-	// 		price : req.body.price,
-	// 		description : req.body.description,
-	// 		image : req.body.image
-	// 	},
-	// 	{
-	// 		new : true
-	// 	})
-	// if(req.files) {
-	// req.body.image = "/uploads/" + req.file.filename;
-		
-	// }
-	// Place.findByIdAndUpdate(req.params.id, req.body,{new:true})
-	// .then(places=>res.json(places))
-	// .catch(next)
+// add image
+router.put('/:id/add-image',upload.single('image'), (req,res,next) => {
+
+	imageAdded = "/uploads/" + req.file.filename
+	// res.json(imageAdded)
+	// Place.find({ _id : req.params.id}).then(places=>res.json(places))
+	Place.findOneAndUpdate({ _id : req.params.id},
+		{$push: {images: {image : imageAdded}}},
+		{new:true})
+	.then(places=>res.json(places))
+	.catch(next)
+
+})
+
+// delete image
+router.put('/:pid/:iid',(req,res,next) => {
+
 	Place.findOneAndUpdate({ _id : req.params.pid},
 			{$pull: {images: {_id : req.params.iid}}},
 			{new:true})
@@ -91,6 +87,8 @@ router.put('/:pid/:iid',upload.array('images'),(req,res,next) => {
 	console.log(req.body)
 })
 
+
+//delete place
 router.delete('/:id',(req,res,next) => {
 	Place.findOneAndDelete({ _id : req.params.id })
 	.then (places=>res.json(places))

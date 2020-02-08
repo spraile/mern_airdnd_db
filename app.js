@@ -25,6 +25,7 @@ mongoose.connect('mongodb://localhost/bookingsystem', () => {
 app.use('/users',require('./routes/users'));
 app.use('/categories',require('./routes/categories'));
 app.use('/places',require('./routes/places'));
+app.use('/reservations',require('./routes/reservations'));
 
 
 //error handling middleware
