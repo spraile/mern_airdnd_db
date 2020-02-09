@@ -28,6 +28,11 @@ const PlaceSchema = new Schema({
 	},
 	images : [{
 		image : String
+	}],
+	reviews : [{
+		userId : String,
+		message : String,
+		dateCreated : Date
 	}]
 
 })

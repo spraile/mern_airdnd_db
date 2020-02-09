@@ -4,8 +4,7 @@ const Schema = mongoose.Schema;
 const ReservationSchema = new Schema({
 	code : {
         type : String,
-		required : [true, "Reservation code is required"]
-        		
+		required : [true, "Reservation code is required"]       		
 	},
 	startdate : {
 		type : Date,
@@ -14,11 +13,15 @@ const ReservationSchema = new Schema({
 	enddate : {
 		type : Date,
 		required : [true, "End date is required"]
-    },
+	},
     price : {
         type : Number,
 		required : [true, "Reservation price is required"]
-    },
+	},
+	status : {
+		type : String,
+		default : "Pending"
+	},
 	placeId : {
 		type : String,
 		required : [true, "Place ID is required"]

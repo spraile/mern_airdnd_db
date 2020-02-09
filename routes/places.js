@@ -74,6 +74,18 @@ router.put('/:id/add-image',upload.single('image'), (req,res,next) => {
 	.catch(next)
 
 })
+// add review
+router.put('/:pid/review',(req,res,next) => {
+	// res.json(req.body)
+	Place.findOneAndUpdate({ _id : req.params.pid},
+			{$push: {reviews: req.body}},
+			{new:true})
+	.then(place => res.json(place))
+	.catch(next)
+	console.log(req.files)
+	console.log(req.body)
+})
+
 
 // delete image
 router.put('/:pid/:iid',(req,res,next) => {
@@ -86,6 +98,20 @@ router.put('/:pid/:iid',(req,res,next) => {
 	console.log(req.files)
 	console.log(req.body)
 })
+
+
+
+// //add review
+// router.put('/:id',(req,res,next) => {
+// 	// Place.findOne({ _id : req.params.id })
+// 	// Place.findOneAndUpdate({ _id : req.params.id},
+// 	// 	{$push: {reviews: req.body}},
+// 	// 	{new:true})
+// 	// .then(places=>res.json(places))
+// 	// .catch(next)
+// 	res.json(req.params.pid)
+
+// })
 
 
 //delete place
