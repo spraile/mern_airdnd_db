@@ -26,6 +26,10 @@ const PlaceSchema = new Schema({
 		type : String,
 		required : [true, "Place description is required"]
 	},
+	location : {
+		type : String,
+		required : [true, "Place description is required"]
+	},
 	images : [{
 		image : String
 	}],

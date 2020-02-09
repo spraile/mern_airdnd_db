@@ -1,5 +1,8 @@
 const router = require('express').Router();
 const Reservation = require('./../models/Reservations');
+const isHost = require('./../is_host');
+const isAdmin = require('./../is_admin');
+
 
 router.get('/', function (req,res,next) {
 
