@@ -1,14 +1,17 @@
 const router = require('express').Router();
 const Reservation = require('./../models/Reservations');
 const isHost = require('./../is_host');
-const isAdmin = require('./../is_admin');
+const isUser = require('./../is_user');
+const passport = require('passport');
+
+// const isAdmin = require('./../is_admin');
 
 
-router.get('/', function (req,res,next) {
+router.get('/',passport.authenticate('jwt',{session : false}), function (req,res,next) {
 
 	Reservation.find()
-	.then( categories => {
-		res.json(categories)
+	.then( reservation => {
+		res.json(reservation)
 	})
 	.catch(next)
 
@@ -22,7 +25,7 @@ router.get('/:id',function (req,res,next) {
 })
 
 //create
-router.post('/',(req,res,next) => {
+router.post('/',passport.authenticate('jwt',{session : false}),isUser,(req,res,next) => {
 
         req.body.code = "R"+Math.random()
 
@@ -35,7 +38,7 @@ router.post('/',(req,res,next) => {
 
 
 //update, status only
-router.put('/:id',(req,res,next) => {
+router.put('/:id',passport.authenticate('jwt',{session : false}),isHost,(req,res,next) => {
 
 	Reservation.findByIdAndUpdate(req.params.id,req.body,{new:true})
 	.then(reservation => res.json(reservation))
@@ -43,13 +46,5 @@ router.put('/:id',(req,res,next) => {
 
 })
 
-router.delete('/:id',(req,res,next) => {
-	Reservation.findOneAndDelete(
-	{
-		_id : req.params.id
-	})
-	.then(reservation => res.json(reservation))
-	.catch(next)
-})
 
 module.exports = router

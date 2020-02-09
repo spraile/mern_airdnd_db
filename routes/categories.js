@@ -1,7 +1,9 @@
 const router = require('express').Router();
 const Category = require('./../models/Categories');
+const isAdmin = require('./../is_admin');
+const passport = require('passport');
 
-router.get('/', function (req,res,next) {
+router.get('/',passport.authenticate('jwt',{session : false}),isAdmin, function (req,res,next) {
 
 	Category.find()
 	.then( categories => {
@@ -12,14 +14,14 @@ router.get('/', function (req,res,next) {
 });
 
 //single
-router.get('/:id',function (req,res,next) {
+router.get('/:id',passport.authenticate('jwt',{session : false}),isAdmin,function (req,res,next) {
 	Category.findOne({ _id : req.params.id })
 	.then(category =>res.json(category))
 	.catch(next)
 })
 
 //create
-router.post('/',(req,res,next) => {
+router.post('/',passport.authenticate('jwt',{session : false}),isAdmin,(req,res,next) => {
 
 
 		Category.create(req.body)
@@ -31,7 +33,7 @@ router.post('/',(req,res,next) => {
 
 
 //update
-router.put('/:id',(req,res,next) => {
+router.put('/:id',passport.authenticate('jwt',{session : false}),isAdmin,(req,res,next) => {
 
 	Category.findByIdAndUpdate(req.params.id,req.body,{new:true})
 	.then(category => res.json(category))
@@ -39,7 +41,7 @@ router.put('/:id',(req,res,next) => {
 
 })
 
-router.delete('/:id',(req,res,next) => {
+router.delete('/:id',passport.authenticate('jwt',{session : false}),isAdmin,(req,res,next) => {
 	Category.findOneAndDelete(
 	{
 		_id : req.params.id

@@ -1,4 +1,7 @@
 const router = require('express').Router();
+const isHost = require('./../is_host');
+const isNotAdmin = require('./../is_not_admin');
+const passport = require('passport');
 const multer = require('multer');
 const storage = multer.diskStorage({
 	destination : (req,file,cb) =>{
@@ -29,7 +32,7 @@ router.get('/:id',function (req,res,next) {
 
 
 //create
-router.post('/',upload.array('images'),(req,res,next) => {
+router.post('/',passport.authenticate('jwt',{session : false}),isHost,upload.array('images'),(req,res,next) => {
 	let imgs = req.files.map(file => {
 		file.filename = "/uploads/" + file.filename
 		return file.filename
@@ -53,7 +56,7 @@ router.post('/',upload.array('images'),(req,res,next) => {
 	.catch(next)
 })
 
-router.put('/:id', (req,res,next) => {
+router.put('/:id',passport.authenticate('jwt',{session : false}),isHost, (req,res,next) => {
 
 	Place.findByIdAndUpdate(req.params.id, req.body,{new:true})
 	.then(places=>res.json(places))
@@ -62,7 +65,7 @@ router.put('/:id', (req,res,next) => {
 })
 
 // add image
-router.put('/:id/add-image',upload.single('image'), (req,res,next) => {
+router.put('/:id/add-image',passport.authenticate('jwt',{session : false}),isHost,upload.single('image'), (req,res,next) => {
 
 	imageAdded = "/uploads/" + req.file.filename
 	// res.json(imageAdded)
@@ -75,7 +78,7 @@ router.put('/:id/add-image',upload.single('image'), (req,res,next) => {
 
 })
 // add review
-router.put('/:pid/review',(req,res,next) => {
+router.put('/:pid/review',passport.authenticate('jwt',{session : false}),isNotAdmin,(req,res,next) => {
 	// res.json(req.body)
 	Place.findOneAndUpdate({ _id : req.params.pid},
 			{$push: {reviews: req.body}},
@@ -88,7 +91,7 @@ router.put('/:pid/review',(req,res,next) => {
 
 
 // delete image
-router.put('/:pid/:iid',(req,res,next) => {
+router.put('/:pid/:iid',passport.authenticate('jwt',{session : false}),isHost,(req,res,next) => {
 
 	Place.findOneAndUpdate({ _id : req.params.pid},
 			{$pull: {images: {_id : req.params.iid}}},
@@ -115,7 +118,7 @@ router.put('/:pid/:iid',(req,res,next) => {
 
 
 //delete place
-router.delete('/:id',(req,res,next) => {
+router.delete('/:id',passport.authenticate('jwt',{session : false}),isHost,(req,res,next) => {
 	Place.findOneAndDelete({ _id : req.params.id })
 	.then (places=>res.json(places))
 	.catch(next)
