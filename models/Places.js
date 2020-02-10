@@ -14,6 +14,10 @@ const PlaceSchema = new Schema({
 		type : Number,
 		required : [true, "Maximum recommended pax is required"]
 	},
+	hostId : {
+		type : String,
+		required : [true, "HostID is required"]
+	},
 	categoryId : {
 		type : String,
 		required : [true, "CategoryId is required"]
@@ -28,7 +32,7 @@ const PlaceSchema = new Schema({
 	},
 	location : {
 		type : String,
-		required : [true, "Place description is required"]
+		required : [true, "Place location is required"]
 	},
 	images : [{
 		image : String

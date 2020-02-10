@@ -28,7 +28,7 @@ router.post('/',(req,res,next) => {
 	let number = req.body.number;
 
 	//check the completeness of details from from
-	if (!firstname || !lastname || !email || !password || !confirmPassword) {
+	if (!firstname || !lastname || !email || !password || !confirmPassword || !number) {
 		return res.status(400).send({
 			message : "Incomplete fields"
 		})
@@ -109,6 +109,7 @@ router.post('/login',(req,res,next)=>{
 			})
 		}
 	})
+	.catch(next)
 })
 
 router.put('/profile',passport.authenticate('jwt',{session : false}),upload.single('picture'),(req,res,next) => {
