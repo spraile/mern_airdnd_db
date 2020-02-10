@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Request = require('./../models/Requests');
+const User = require('./../models/Users');
 const isAdmin = require('./../is_admin');
 const isUser = require('./../is_user');
 const passport = require('passport');
@@ -42,17 +43,27 @@ router.put('/:id',passport.authenticate('jwt',{session : false}),isAdmin,(req,re
     switch(req.body.decision) {
         case "accepted":
             req.body.status = "Accepted"
+            req.body.role = "host"
+
+            Request.findByIdAndUpdate(req.params.id,req.body,{new:true})
+            .then(request => {
+            	User.findByIdAndUpdate(request.userId,req.body,{new:true})
+            	.then(request => res.json(request))
+            	.catch(next)
+            })
+            .catch(next)
             break;
         case "rejected":
             req.body.status = "Rejected"
+            Request.findByIdAndUpdate(req.params.id,req.body,{new:true})
+            .then(request => res.json(request))
+            .catch(next)
+
             break;
         default:
             res.status(400).send({"message" : "decision not found"})            
     }
-	Request.findByIdAndUpdate(req.params.id,req.body,{new:true})
-	.then(request => res.json(request))
-	.catch(next)
-
+	
 })
 
 module.exports = router;
