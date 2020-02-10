@@ -3,7 +3,7 @@ const Category = require('./../models/Categories');
 const isAdmin = require('./../is_admin');
 const passport = require('passport');
 
-router.get('/',passport.authenticate('jwt',{session : false}),isAdmin, function (req,res,next) {
+router.get('/', function (req,res,next) {
 
 	Category.find()
 	.then( categories => {
