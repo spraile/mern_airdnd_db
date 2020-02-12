@@ -49,7 +49,7 @@ router.post('/',passport.authenticate('jwt',{session : false}),isHost,upload.arr
 		})
 		
 	let allImages = newFile
-
+	req.body.hostId = req.user._id	
 	req.body.images = allImages;
 	Place.create(req.body)
 	.then(places => res.send(places))
@@ -89,6 +89,17 @@ router.put('/:pid/review',passport.authenticate('jwt',{session : false}),isNotAd
 	console.log(req.body)
 })
 
+// add date
+router.put('/:pid/reservation',passport.authenticate('jwt',{session : false}),isHost,(req,res,next) => {
+	// res.json(req.body)
+	Place.findOneAndUpdate({ _id : req.params.pid},
+			{$push: {reservedDates: req.body}},
+			{new:true})
+	.then(place => res.json(place))
+	.catch(next)
+	console.log(req.files)
+	console.log(req.body)
+})
 
 // delete image
 router.put('/:pid/:iid',passport.authenticate('jwt',{session : false}),isHost,(req,res,next) => {

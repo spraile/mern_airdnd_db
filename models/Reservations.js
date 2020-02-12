@@ -6,17 +6,16 @@ const ReservationSchema = new Schema({
         type : String,
 		required : [true, "Reservation code is required"]       		
 	},
-	startdate : {
-		type : Date,
-		required : [true, "Start date is required"]
-	},
-	enddate : {
-		type : Date,
-		required : [true, "End date is required"]
-	},
+	reservedDates : [{
+		reservedDate : Date
+	}],
     price : {
         type : Number,
 		required : [true, "Reservation price is required"]
+	},
+	guestCount : {
+		type : Number,
+		required : [true, "Guest count is required"]
 	},
 	status : {
 		type : String,

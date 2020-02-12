@@ -34,6 +34,10 @@ const PlaceSchema = new Schema({
 		type : String,
 		required : [true, "Place location is required"]
 	},
+	status : {
+		type : String,
+		default : "Active"
+	},
 	images : [{
 		image : String
 	}],
@@ -41,6 +45,9 @@ const PlaceSchema = new Schema({
 		userId : String,
 		message : String,
 		dateCreated : Date
+	}],
+	reservedDates : [{
+		reservedDate : Date
 	}]
 
 })
