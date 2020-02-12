@@ -44,7 +44,12 @@ const ReservationSchema = new Schema({
 	placeName : {
 		type : String,
 		required : [true, "place name is required"]
+	},
+	url : {
+		type : String,
+		default : "None"
 	}
+
 
 })
 

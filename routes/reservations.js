@@ -55,11 +55,11 @@ router.post('/',passport.authenticate('jwt',{session : false}),isUser,(req,res,n
 		.catch(next)
 })
 
-router.post('/stripe',passport.authenticate('jwt',{session : false}),isUser,(req,res,next) => {
+router.post('/stripe',passport.authenticate('jwt',{session : false}),isHost,(req,res,next) => {
 
 	let total = req.body.price;
 	
-	User.findOne({_id : req.user._id})
+	User.findOne({_id : req.body.userId})
 	.then( user => {
 		if(!user) {
 			res.status(500).send({message: 'Incomplete'})
