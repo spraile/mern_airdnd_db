@@ -11,11 +11,20 @@ const stripe = require('stripe')("sk_test_QIdH84htWzpuOq95FvEV1A5j0061iS9SJH")
 
 router.get('/',passport.authenticate('jwt',{session : false}), function (req,res,next) {
 
-	Reservation.find()
-	.then( reservation => {
-		res.json(reservation)
-	})
-	.catch(next)
+	if(req.user.role == 'host') {
+		Reservation.find({ hostId : req.user.id })
+		.then( reservation => {
+			res.json(reservation)
+		})
+		.catch(next)
+	} else {
+		Reservation.find( {userId : req.user.id })
+		.then( reservation => {
+			res.json(reservation)
+		})
+		.catch(next)
+	}
+	
 
 });
 
