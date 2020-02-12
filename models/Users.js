@@ -23,6 +23,7 @@ const UserSchema = new Schema({
 		type: String,
 		required : true
 	},
+	stripeCustomerId : String,
 	role: {
 		type: String,
 		default: "user"

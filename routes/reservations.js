@@ -1,8 +1,10 @@
 const router = require('express').Router();
 const Reservation = require('./../models/Reservations');
+const User = require('./../models/Users');
 const isHost = require('./../is_host');
 const isUser = require('./../is_user');
 const passport = require('passport');
+const stripe = require('stripe')("sk_test_QIdH84htWzpuOq95FvEV1A5j0061iS9SJH")
 
 // const isAdmin = require('./../is_admin');
 
@@ -43,6 +45,78 @@ router.post('/',passport.authenticate('jwt',{session : false}),isUser,(req,res,n
 		.catch(next)
 })
 
+router.post('/stripe',passport.authenticate('jwt',{session : false}),isUser,(req,res,next) => {
+
+	let total = req.body.price;
+	
+	User.findOne({_id : req.user._id})
+	.then( user => {
+		if(!user) {
+			res.status(500).send({message: 'Incomplete'})
+		} else {
+			if(!user.stripeCustomerId){
+	            stripe.customers
+	            .create({
+	                email: req.user.email,
+	            })
+	            .then(customer => {
+	                return User.findByIdAndUpdate({ _id: user._id},{stripeCustomerId : customer.id}, {new:true})
+	            })
+	            .then( user => {
+	                return stripe.customers.retrieve(user.stripeCustomerId)
+	            })
+	            .then((customer) => {
+	                return stripe.customers.createSource(customer.id, {
+	                source: 'tok_visa',
+	                });
+	            })
+	            .then((source) => {
+	                return stripe.charges.create({
+	                amount: total,
+	                currency: 'usd',
+	                customer: source.customer,
+	                });
+	            })
+	            .then((charge) => {
+	                // New charge created on a new customer
+	                console.log(charge)
+
+	                res.send(charge);
+	            })
+	            .catch((err) => {
+	                // Deal with an error
+	                res.send(err)
+	            });
+	        } else {
+                stripe.customers.retrieve(user.stripeCustomerId)
+                .then((customer) => {
+                    return stripe.customers.createSource(customer.id, {
+                    source: 'tok_visa',
+                    });
+                })
+                .then((source) => {
+                    return stripe.charges.create({
+                    amount: total * 100, //multiply by 100 for centavos
+                    currency: 'usd',
+                    customer: source.customer,
+                    });
+                })
+                .then((charge) => {
+                    // New charge created on a new customer
+                    // console.log(charge)
+                    res.send(charge);
+                })
+                .catch((err) => {
+                    // Deal with an error
+                    res.send(err)
+                });
+            }
+
+
+		}
+	})
+
+})
 
 //update, status only
 router.put('/:id',passport.authenticate('jwt',{session : false}),isHost,(req,res,next) => {
