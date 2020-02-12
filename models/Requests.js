@@ -13,7 +13,11 @@ const RequestSchema = new Schema({
 	userId : {
 		type : String,
 		required : [true, "UserID is required"]
-    },
+	},
+	userName : {
+		type : String,
+		required : [true, "UserID is required"]
+	},
     status : {
         type : String,
         default : "Pending"

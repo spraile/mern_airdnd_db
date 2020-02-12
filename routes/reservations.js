@@ -29,7 +29,8 @@ router.get('/:id',function (req,res,next) {
 //create
 router.post('/',passport.authenticate('jwt',{session : false}),isUser,(req,res,next) => {
 
-        req.body.code = "R"+Math.random()
+        req.body.code = "RV"+Math.random().toString(36).substring(2, 15)
+        req.body.code = req.body.code.toUpperCase()
 		let reserved = req.body.reservedDates
 		// res.send = reserved
 		console.log(reserved)

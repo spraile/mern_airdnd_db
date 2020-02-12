@@ -18,6 +18,10 @@ const PlaceSchema = new Schema({
 		type : String,
 		required : [true, "HostID is required"]
 	},
+	hostName : {
+		type : String,
+		required : [true, "HostID is required"]
+	},
 	categoryId : {
 		type : String,
 		required : [true, "CategoryId is required"]

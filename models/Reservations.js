@@ -32,6 +32,18 @@ const ReservationSchema = new Schema({
 	userId : {
 		type : String,
 		required : [true, "Customer ID is required"]
+	},
+	userName : {
+		type : String,
+		required : [true, "Customer ID is required"]
+	},
+	hostName : {
+		type : String,
+		required : [true, "HostID is required"]
+	},
+	placeName : {
+		type : String,
+		required : [true, "place name is required"]
 	}
 
 })

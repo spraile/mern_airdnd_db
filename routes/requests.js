@@ -28,8 +28,10 @@ router.post('/',passport.authenticate('jwt',{session : false}),isUser,(req,res,n
         let dateCr = new Date()
 
         req.body.userId = req.user.id;
+        req.body.userName = req.user.firstname + " " + req.user.lastname
         req.body.dateCreated = dateCr.toISOString().slice(0,10);
-        req.body.code = "RE" + Math.random()
+        req.body.code = "RE" + Math.random().toString(36).substring(2, 15)
+        req.body.code = req.body.code.toUpperCase()
 		Request.create(req.body)
 		.then((request)=>{
 			res.send(request)
@@ -41,7 +43,7 @@ router.post('/',passport.authenticate('jwt',{session : false}),isUser,(req,res,n
 router.put('/:id',passport.authenticate('jwt',{session : false}),isAdmin,(req,res,next) => {
 
     switch(req.body.decision) {
-        case "accepted":
+        case "Accepted":
             req.body.status = "Accepted"
             req.body.role = "host"
 
@@ -53,7 +55,7 @@ router.put('/:id',passport.authenticate('jwt',{session : false}),isAdmin,(req,re
             })
             .catch(next)
             break;
-        case "rejected":
+        case "Rejected":
             req.body.status = "Rejected"
             Request.findByIdAndUpdate(req.params.id,req.body,{new:true})
             .then(request => res.json(request))

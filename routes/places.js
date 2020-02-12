@@ -50,6 +50,7 @@ router.post('/',passport.authenticate('jwt',{session : false}),isHost,upload.arr
 		
 	let allImages = newFile
 	req.body.hostId = req.user._id	
+	req.body.hostName = req.user.firstname + " " + req.user.lastname
 	req.body.images = allImages;
 	Place.create(req.body)
 	.then(places => res.send(places))
